@@ -2,13 +2,22 @@
     export let state = {};
 
     const hireSomeone = () => {
-    if (state.money >= state.peopleCost) {
-        state.people += 1;
-        state.money -= state.peopleCost;
-    } else {
-        alert("You don't have enough money to hire someone.");
+        if (state.money >= state.peopleCost) {
+            state.people += 1;
+            state.money -= state.peopleCost;
+        } else {
+            alert("You don't have enough money to hire someone.");
+        }
     }
-}
+
+    const recruitFriend = () => {
+        const chance = Math.random();
+        if (chance > 0.5) {
+            state.people += 1;
+        } else {
+            state.notifications.push("Your friend doesn't want to help you.");
+        }
+    }
 
 const updateVars = () =>{
     state.doors += state.people;
@@ -32,6 +41,11 @@ setInterval(updateVars, 1000);
 </p>
 
 {#if state.doors > 10}
+<p>Ask a friend to help you.<br>
+<button on:click={recruitFriend}>Recruit a friend</button></p>
+{/if}
+
+{#if state.money}
 <p>Hire someone to knock on doors for you.<br>
 <button on:click={hireSomeone}>Hire someone</button><br>
 <b>Door-knockers: {state.people}</b></p>
