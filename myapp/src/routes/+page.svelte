@@ -1,25 +1,28 @@
+
 <script>
+    //TODO: implement localstorage save/load
     import Campaigning from "../components/campaigning.svelte";
     import Notifications from "../components/notifications.svelte";
 
     let state = {
-        supporters: 0,
-        money: 100,
-        people: 0,
-        doors: 0,
+        supporters: 100,
+        money: 0,
+        people: 100,
+        doors: 1000,
         peopleCost: 10,
+        addNotification: (message) => {
+            state.notifications.push({ date: new Date(), message })
+        },
         notifications: [],
         isSave: false,
+        achievements: {
+            doorKnockers: false,
+        }
     };
 
-    // if (!state.isSave) {
-    //     if (localStorage.getItem("state")) {
-    //         state = JSON.parse(localStorage.getItem("state"));
-    //     }
-    // }
 </script>
 
-<h1>Political Simulator</h1>
+<h1>Just a Friendly Game</h1>
 
 <Campaigning bind:state />
 <Notifications bind:state />

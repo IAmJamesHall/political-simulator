@@ -2,11 +2,12 @@
     export let state = {};
 
     const hireSomeone = () => {
+        state.achievements.doorKnockers = true;
         if (state.money >= state.peopleCost) {
             state.people += 1;
             state.money -= state.peopleCost;
         } else {
-            alert("You don't have enough money to hire someone.");
+            state.addNotification("You don't have enough money to hire someone.");
         }
     };
 
@@ -14,15 +15,9 @@
         const chance = Math.random();
         if (chance > 0.5) {
             state.people += 1;
-            state.notifications.push({
-                date: new Date(),
-                message: "Yay! Your friend has joined your cause.",
-            });
+            state.addNotification("Yay! Your friend has joined your cause.");
         } else {
-            state.notifications.push({
-                date: new Date(),
-                message: "Boo. Your friend doesn't want to help you.",
-            });
+            state.addNotification("Boo. Your friend doesn't want to help you");
         }
     };
 
@@ -54,10 +49,7 @@
         const reason =
             reasonsForLoss[Math.floor(Math.random() * reasonsForLoss.length)];
 
-        state.notifications.push({
-            date: new Date(),
-            message: `You received $${donations} in donations, and lost ${supportersLost} supporters who thought ${reason}`,
-        });
+        state.addNotification(`You received $${donations} in donations, and lost ${supportersLost} supporters who thought ${reason}`);
     }
 
     const updateVars = () => {
@@ -72,34 +64,29 @@
 </script>
 
 <h3>Campaigning</h3>
-<p>
-    Talk to people in your town to gain clout.<br />
+<i>Goal: Gain supporters for your future aspirations</i><br>
+<b>Supporters: {state.supporters}</b>
+<hr>
 
     <!-- button to talk to people -->
-    <button on:click={() => (state.doors += 1)}>Knock on a door</button><br />
+    <button on:click={() => (state.doors += 1)}>Knock on door</button><br />
     <b>Doors: {state.doors}</b>
-</p>
 
 {#if state.doors >= 10}
     <p>
-        Ask a friend to help you.<br />
-        <button on:click={recruitFriend}>Recruit a friend</button>
-    </p>
-{/if}
-
-
-<p>Supporters: {state.supporters}</p>
-
-{#if state.supporters > 100}
-    <p>Ask your supporters for money<br />
-    <button on:click={askForDonations}>Ask for donations</button><br />
-    <b>Money: {state.money}</b></p>
-{/if}
-
-{#if state.money > 100}
-    <p>
-        Hire someone to knock on doors for you.<br />
-        <button on:click={hireSomeone}>Hire someone (cost $10)</button><br />
+        Try to recruit a friend to knock too
+        <button on:click={recruitFriend}>Ask</button><br>
+        {#if state.money > 100 || state.achievements.doorKnockers}
+            Hire someone to knock on doors for you.
+            <button on:click={hireSomeone}>costs $10</button><br>
+        {/if}
         <b>Door-knockers: {state.people}</b> ({state.people} doors/s)
     </p>
+{/if}
+
+
+{#if state.supporters > 100}
+    <p>Ask your supporters for money
+    <button on:click={askForDonations}>Send request</button><br />
+    <b>Money: ${state.money}</b></p>
 {/if}
